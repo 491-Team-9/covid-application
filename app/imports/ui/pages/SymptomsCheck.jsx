@@ -22,6 +22,7 @@ class SymptomsCheck extends React.Component {
 
   // On submit, insert the data.
   submit(data, formRef) {
+    console.log(data);
     const { testPos, illness, exposure, date } = data;
     const owner = Meteor.user().username;
     Symptoms.collection.insert({ testPos, illness, exposure, date, owner },

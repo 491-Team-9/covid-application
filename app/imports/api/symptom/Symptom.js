@@ -13,9 +13,18 @@ class SymptomsCollection {
     this.collection = new Mongo.Collection(this.name);
     // Define the structure of each document in the collection.
     this.schema = new SimpleSchema({
-      testPos: Boolean,
-      illness: Boolean,
-      exposure: Boolean,
+      testPos: {
+        type: Boolean,
+        optional: true,
+      },
+      illness: {
+        type: Boolean,
+        optional: true,
+      },
+      exposure: {
+        type: Boolean,
+        optional: true,
+      },
       date: Date,
     }, { tracker: Tracker });
     // Attach the schema to the collection, so all attempts to insert a document are checked against schema.
