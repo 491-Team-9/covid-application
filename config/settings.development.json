@@ -11,6 +11,8 @@
     { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
   ],
 
-  "defaultSymptoms":
-    { "testPos": true, "illness": true, "exposure": true }
+  "defaultSymptoms": [
+    { "testPos": true, "illness": true, "exposure": true, "owner":  "admin@foo.com"},
+    { "testPos": true, "illness": true, "exposure": true, "owner":  "john@foo.com"}
+  ]
 }
