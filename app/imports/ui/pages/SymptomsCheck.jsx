@@ -8,12 +8,7 @@ import SimpleSchema from 'simpl-schema';
 import { Symptoms } from '../../api/symptom/Symptom';
 
 // Create a schema to specify the structure of the data to appear in the form.
-const formSchema = new SimpleSchema({
-  testPos: Boolean,
-  illness: Boolean,
-  exposure: Boolean,
-  date: Date,
-});
+const formSchema = Symptoms.schema;
 
 const bridge = new SimpleSchema2Bridge(formSchema);
 

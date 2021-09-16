@@ -25,6 +25,7 @@ class SymptomsCollection {
         type: Boolean,
         optional: true,
       },
+      owner: String,
       date: Date,
     }, { tracker: Tracker });
     // Attach the schema to the collection, so all attempts to insert a document are checked against schema.
