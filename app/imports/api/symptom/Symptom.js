@@ -15,15 +15,15 @@ class SymptomsCollection {
     this.schema = new SimpleSchema({
       testPos: {
         type: Boolean,
-        optional: true,
+        defaultValue:false
       },
       illness: {
         type: Boolean,
-        optional: true,
+        defaultValue:false
       },
       exposure: {
         type: Boolean,
-        optional: true,
+        defaultValue:false
       },
       owner: String,
       date: Date,

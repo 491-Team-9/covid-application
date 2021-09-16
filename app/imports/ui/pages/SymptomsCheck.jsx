@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Header, Container } from 'semantic-ui-react';
-import { AutoForm, SubmitField, BoolField, DateField, ErrorsField } from 'uniforms-semantic';
+import { Grid, Header, Container, Loader } from 'semantic-ui-react';
+import { AutoForm, SubmitField, BoolField, DateField, ErrorsField, HiddenField } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -8,7 +8,22 @@ import SimpleSchema from 'simpl-schema';
 import { Symptoms } from '../../api/symptom/Symptom';
 
 // Create a schema to specify the structure of the data to appear in the form.
-const formSchema = Symptoms.schema;
+const formSchema = new SimpleSchema({
+  testPos: {
+    type: Boolean,
+    optional:true
+  },
+  illness: {
+    type: Boolean,
+    optional:true
+  },
+  exposure: {
+    type: Boolean,
+    optional:true
+  },
+  date: Date,
+});
+
 
 const bridge = new SimpleSchema2Bridge(formSchema);
 
@@ -21,9 +36,13 @@ class SymptomsCheck extends React.Component {
     const { testPos, illness, exposure, date } = data;
     const owner = Meteor.user().username;
     Symptoms.collection.insert({ testPos, illness, exposure, date, owner },
-      (sick = (testPos || illness || exposure)) => {
+      (error, result) => {
+        if (error) {
+          console.error(err);
+        }
+        let sick = testPos || illness || exposure;
         if (sick) {
-          swal('Stay Home', error.message, 'Please DO NOT report to campus. DO NOT attend UH in-person events or activities.');
+          swal('Stay Home', 'Please DO NOT report to campus. DO NOT attend UH in-person events or activities.');
         } else {
           swal('Success', 'You may report to campus and adhere to location restrictions.', 'success');
           formRef.reset();
