@@ -15,18 +15,21 @@ class SymptomsCollection {
     this.schema = new SimpleSchema({
       testPos: {
         type: Boolean,
-        defaultValue:false
+        defaultValue: false,
       },
       illness: {
         type: Boolean,
-        defaultValue:false
+        defaultValue: false,
       },
       exposure: {
         type: Boolean,
-        defaultValue:false
+        defaultValue: false,
       },
       owner: String,
-      date: Date,
+      date: {
+        type: Date,
+        defaultValue: new Date(),
+      },
     }, { tracker: Tracker });
     // Attach the schema to the collection, so all attempts to insert a document are checked against schema.
     this.collection.attachSchema(this.schema);

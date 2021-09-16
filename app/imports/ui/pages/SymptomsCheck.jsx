@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Header, Container, Loader } from 'semantic-ui-react';
-import { AutoForm, SubmitField, BoolField, DateField, ErrorsField, HiddenField } from 'uniforms-semantic';
+import { Container, Grid, Header } from 'semantic-ui-react';
+import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -11,19 +11,21 @@ import { Symptoms } from '../../api/symptom/Symptom';
 const formSchema = new SimpleSchema({
   testPos: {
     type: Boolean,
-    optional:true
+    defaultValue: false,
   },
   illness: {
     type: Boolean,
-    optional:true
+    defaultValue: false,
   },
   exposure: {
     type: Boolean,
-    optional:true
+    defaultValue: false,
   },
-  date: Date,
+  date: {
+    type: Date,
+    defaultValue: new Date(),
+  },
 });
-
 
 const bridge = new SimpleSchema2Bridge(formSchema);
 
@@ -32,19 +34,17 @@ class SymptomsCheck extends React.Component {
 
   // On submit, insert the data.
   submit(data, formRef) {
-    console.log(data);
     const { testPos, illness, exposure, date } = data;
     const owner = Meteor.user().username;
     Symptoms.collection.insert({ testPos, illness, exposure, date, owner },
-      (error, result) => {
+      (error) => {
         if (error) {
-          console.error(err);
-        }
-        let sick = testPos || illness || exposure;
-        if (sick) {
-          swal('Stay Home', 'Please DO NOT report to campus. DO NOT attend UH in-person events or activities.');
+          swal('Error', error.message, 'error');
+        } else
+        if (testPos || illness || exposure) {
+          swal('Stay Home', 'Please DO NOT report to campus. DO NOT attend UH in-person events or activities.', 'error');
         } else {
-          swal('Success', 'You may report to campus and adhere to location restrictions.', 'success');
+          swal('Clear', 'You may report to campus and adhere to location restrictions.', 'success');
           formRef.reset();
         }
       });
@@ -56,7 +56,9 @@ class SymptomsCheck extends React.Component {
     return (
       <Container>
         <Header as="h2" textAlign="center">Daily Symptoms Check</Header>
-        <AutoForm ref={ref => { fRef = ref; }} schema={bridge} onSubmit={data => this.submit(data, fRef)} >
+        <AutoForm ref={ref => {
+          fRef = ref;
+        }} schema={bridge} onSubmit={data => this.submit(data, fRef)}>
           <Grid container>
             <Grid.Row>
               <Grid.Column width={11}>
@@ -66,13 +68,14 @@ class SymptomsCheck extends React.Component {
                 <BoolField
                   name='testPos'
                   appearance="checkbox"
-                  appearance="toggle"
                 />
               </Grid.Column>
             </Grid.Row>
             <Grid.Row>
               <Grid.Column width={10}>
-                <h4>Check for Symptoms of Illness:  If you have any symptoms of illness, do not come to campus or the workplace.  Do you currently have any of the following symptoms that are new, worsening, and not attributable to a pre-existing condition?</h4>
+                <h4>Check for Symptoms of Illness: If you have any symptoms of illness, do not come to campus or the
+                    workplace. Do you currently have any of the following symptoms that are new, worsening, and not
+                    attributable to a pre-existing condition?</h4>
                 <ul>
                   <li>Fever greater than 100.4 °F or feeling feverish (chills, sweating)</li>
                   <li>Cough</li>
@@ -91,7 +94,6 @@ class SymptomsCheck extends React.Component {
                 <BoolField
                   name='illness'
                   appearance="checkbox"
-                  appearance="toggle"
                 />
               </Grid.Column>
             </Grid.Row>
@@ -99,16 +101,23 @@ class SymptomsCheck extends React.Component {
               <Grid.Column width={11}>
                 <h4>Check for Recent COVID-19 Exposure</h4>
                 <ul>
-                  <li>Have you traveled out of the state and are currently under quarantine orders by the Department of Health or your medical care provider ?</li>
-                  <li>Are you unvaccinated and have been in close contact (less than 6 feet for more than 15 minutes, cumulatively, over a 24-hour period) with anyone who has an active, diagnosed case of COVID-19?  Note: Healthcare students/personnel wearing appropriate PPE at ALL TIMES while caring for a patient with COVID-19 would NOT be considered a close contact</li>
-                  <li>Has the Department of Health told you that you have been in contact with a person with COVID-19 AND you are UNvaccinated?</li>
+                  <li>Have you traveled out of the state and are currently under quarantine orders by the Department
+                      of Health or your medical care provider ?
+                  </li>
+                  <li>Are you unvaccinated and have been in close contact (less than 6 feet for more than 15 minutes,
+                      cumulatively, over a 24-hour period) with anyone who has an active, diagnosed case of COVID-19?
+                      Note: Healthcare students/personnel wearing appropriate PPE at ALL TIMES while caring for a
+                      patient with COVID-19 would NOT be considered a close contact
+                  </li>
+                  <li>Has the Department of Health told you that you have been in contact with a person with COVID-19
+                      AND you are UNvaccinated?
+                  </li>
                 </ul>
               </Grid.Column>
               <Grid.Column floated='right'>
                 <BoolField
-                   name='exposure'
-                   appearance="checkbox"
-                   appearance="toggle"
+                  name='exposure'
+                  appearance="checkbox"
                 />
               </Grid.Column>
             </Grid.Row>
