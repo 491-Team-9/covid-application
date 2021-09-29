@@ -39,13 +39,13 @@ class Home extends React.Component {
             <Card>
               <Card.Content>
                 <Card.Header>
-                Vaccination Card Submission - In Progress
+                Vaccination Card Submission
                   <Button color="red" floated='right' href=''><Icon name="warning sign"/>Info Required</Button>
                 </Card.Header>
                 <Card.Description>
                   To speed up the check-in process, you can submit vaccination card to be approved quickly.
                   <br/><br/>
-                  <Button href='' color="blue">Submit Vaccination Card</Button>
+                  <Button href='#/addcard' color="blue">Submit Vaccination Card</Button>
                 </Card.Description>
               </Card.Content>
             </Card>

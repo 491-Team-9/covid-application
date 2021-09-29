@@ -11,6 +11,7 @@ import Home from '../pages/Home';
 import ListStuff from '../pages/ListStuff';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import SymptomsCheck from '../pages/SymptomsCheck';
+import VaccineCard from '../pages/VaccineCard';
 import EditStuff from '../pages/EditStuff';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
@@ -32,6 +33,7 @@ class App extends React.Component {
             <ProtectedRoute path="/home" component={Home}/>
             <ProtectedRoute path="/list" component={ListStuff}/>
             <ProtectedRoute path="/add" component={SymptomsCheck}/>
+            <ProtectedRoute path="/addcard" component={VaccineCard}/>
             <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <Route component={NotFound}/>
