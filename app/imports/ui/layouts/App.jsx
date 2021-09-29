@@ -8,10 +8,10 @@ import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../pages/Landing';
 import Home from '../pages/Home';
-import ListStuff from '../pages/ListStuff';
+import History from '../pages/History';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import SymptomsCheck from '../pages/SymptomsCheck';
-import EditStuff from '../pages/EditStuff';
+import EditSymptom from '../pages/EditSymptom';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
@@ -30,9 +30,9 @@ class App extends React.Component {
             <Route path="/signup" component={Signup}/>
             <Route path="/signout" component={Signout}/>
             <ProtectedRoute path="/home" component={Home}/>
-            <ProtectedRoute path="/list" component={ListStuff}/>
-            <ProtectedRoute path="/add" component={SymptomsCheck}/>
-            <ProtectedRoute path="/edit/:_id" component={EditStuff}/>
+            <ProtectedRoute path="/history" component={History}/>
+            <ProtectedRoute path="/daily-check" component={SymptomsCheck}/>
+            <ProtectedRoute path="/edit/:_id" component={EditSymptom}/>
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <Route component={NotFound}/>
           </Switch>

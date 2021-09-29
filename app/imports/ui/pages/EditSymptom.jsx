@@ -1,64 +1,43 @@
 import React from 'react';
-import { Container, Grid, Header } from 'semantic-ui-react';
-import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
+import { Grid, Loader, Header, Container } from 'semantic-ui-react';
 import swal from 'sweetalert';
+import { AutoForm, BoolField, DateField, ErrorsField, SubmitField } from 'uniforms-semantic';
 import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
-import SimpleSchema from 'simpl-schema';
 import { Symptoms } from '../../api/symptom/Symptom';
 
-// Create a schema to specify the structure of the data to appear in the form.
-const formSchema = new SimpleSchema({
-  testPos: {
-    type: Boolean,
-    defaultValue: false,
-  },
-  illness: {
-    type: Boolean,
-    defaultValue: false,
-  },
-  exposure: {
-    type: Boolean,
-    defaultValue: false,
-  },
-  date: {
-    type: Date,
-    defaultValue: new Date(),
-  },
-});
+const bridge = new SimpleSchema2Bridge(Symptoms.schema);
 
-const bridge = new SimpleSchema2Bridge(formSchema);
+/** Renders the Page for editing a single document. */
+class EditSymptom extends React.Component {
 
-/** Renders the Page for adding a document. */
-class SymptomsCheck extends React.Component {
+  // On successful submit, insert the data.
+  submit(data) {
+    const { date, testPos, illness, exposure, _id } = data;
+    Symptoms.collection.update(_id, { $set: { date, testPos, illness, exposure } }, (error) => {
+      if (error) {
+        swal('Error', error.message, 'error');
+      } else if (testPos || illness || exposure) {
+        swal('Stop', 'Please Stay Home. DO NOT report to campus or attend UH in-person events or activities.', 'error');
+      } else {
+        swal('Clear', 'You may report to campus / Anyone in Quarantine MUST adhere to location restrictions.', 'success');
+      }
+    });
+  }
 
-  // On submit, insert the data.
-  submit(data, formRef) {
-    const { testPos, illness, exposure, date } = data;
-    const owner = Meteor.user().username;
-    Symptoms.collection.insert({ testPos, illness, exposure, date, owner },
-      (error) => {
-        if (error) {
-          swal('Error', error.message, 'error');
-        } else
-        if (testPos || illness || exposure) {
-          swal('Stop', 'Please Stay Home. DO NOT report to campus or attend UH in-person events or activities.', 'error');
-        } else {
-          swal('Clear', 'You may report to campus / Anyone in Quarantine MUST adhere to location restrictions.', 'success');
-          formRef.reset();
-        }
-      });
+  // If the subscription(s) have been received, render the page, otherwise show a loading icon.
+  render() {
+    return (this.props.ready) ? this.renderPage() : <Loader active>Getting data</Loader>;
   }
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
-  render() {
-    let fRef = null;
+  renderPage() {
     return (
       <Container>
         <Header as="h2" textAlign="center">Daily Symptoms Check</Header>
-        <AutoForm ref={ref => {
-          fRef = ref;
-        }} schema={bridge} onSubmit={data => this.submit(data, fRef)}>
+        <AutoForm schema={bridge} onSubmit={data => this.submit(data)} model={this.props.doc}>
           <Grid container>
             <Grid.Row>
               <Grid.Column width={11}>
@@ -134,4 +113,25 @@ class SymptomsCheck extends React.Component {
   }
 }
 
-export default SymptomsCheck;
+// Require the presence of a Symptom document in the props object. Uniforms adds 'model' to the props, which we use.
+EditSymptom.propTypes = {
+  doc: PropTypes.object,
+  model: PropTypes.object,
+  ready: PropTypes.bool.isRequired,
+};
+
+// withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
+export default withTracker(({ match }) => {
+  // Get the documentID from the URL field. See imports/ui/layouts/App.jsx for the route containing :_id.
+  const documentId = match.params._id;
+  // Get access to Symptom documents.
+  const subscription = Meteor.subscribe(Symptoms.userPublicationName);
+  // Determine if the subscription is ready
+  const ready = subscription.ready();
+  // Get the document
+  const doc = Symptoms.collection.findOne(documentId);
+  return {
+    doc,
+    ready,
+  };
+})(EditSymptom);

@@ -9,7 +9,7 @@ class Home extends React.Component {
 
         <Grid.Column width={12}>
           <Card.Group itemsPerRow={1}>
-            <Card href='#/add'>
+            <Card href='#/daily-check'>
               <Card.Content>
                 <Card.Header>
                   <Icon name="info circle"/>Daily Check-In
@@ -23,6 +23,7 @@ class Home extends React.Component {
               <Card.Content>
                 <Card.Header>
                 Daily health check-in
+                  <Button href='#/history' color="blue" floated='right'><Icon name='history'/>View Check-In History</Button>
                 </Card.Header>
                 <Card.Description>
                 Help keep our campus safe by completing your daily health check in!
@@ -32,7 +33,7 @@ class Home extends React.Component {
                     <List.Item>Keep track of your symptoms every day.</List.Item>
                   </List>
                   <br/>
-                  <Button href='#/add' color="blue"><Icon name='heart'/>Check Your Symptoms</Button>
+                  <Button href='#/daily-check' color="blue"><Icon name='heart'/>Check Your Symptoms</Button>
                 </Card.Description>
               </Card.Content>
             </Card>
@@ -59,16 +60,6 @@ class Home extends React.Component {
                 To speed up the check-in process, you can submit test result to be approved quickly.
                   <br/><br/>
                   <Button href='' color="blue">Submit a Test Result</Button>
-                </Card.Description>
-              </Card.Content>
-            </Card>
-            <Card href='#/list'>
-              <Card.Content>
-                <Card.Header>
-                  Check-In History
-                </Card.Header>
-                <Card.Description>
-                  No history available.
                 </Card.Description>
               </Card.Content>
             </Card>
