@@ -1,5 +1,8 @@
 import React from 'react';
 import { Grid, Card, Button, Icon, List } from 'semantic-ui-react';
+import { Meteor } from 'meteor/meteor';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Vaccines } from '../../api/vaccine/Vaccine';
 
 /** A simple static component to render some text for the landing page. */
 class Home extends React.Component {
@@ -36,6 +39,16 @@ class Home extends React.Component {
                 </Card.Description>
               </Card.Content>
             </Card>
+            { this.props.vaccines.length > 0 ?
+            <Card>
+              <Card.Content>
+                <Card.Header>
+                Vaccination Card Submission
+                  <Button color="green" floated='right' href=''><Icon name="check"/>Valid</Button>
+                </Card.Header>
+              </Card.Content>
+            </Card>
+            :
             <Card>
               <Card.Content>
                 <Card.Header>
@@ -48,7 +61,7 @@ class Home extends React.Component {
                   <Button href='#/addcard' color="blue">Submit Vaccination Card</Button>
                 </Card.Description>
               </Card.Content>
-            </Card>
+            </Card> }
             <Card>
               <Card.Content>
                 <Card.Header>
@@ -119,4 +132,13 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+// withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
+export default withTracker(() => {
+  // Get access to Stuff documents.
+  const subscription = Meteor.subscribe(Vaccines.userPublicationName);
+  // Get the Stuff documents
+  const vaccines = Vaccines.collection.find({}).fetch();
+  return {
+    vaccines,
+  };
+})(Home);
