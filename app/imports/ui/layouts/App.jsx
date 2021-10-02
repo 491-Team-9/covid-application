@@ -12,6 +12,7 @@ import History from '../pages/History';
 import ListStuffAdmin from '../pages/ListStuffAdmin';
 import SymptomsCheck from '../pages/SymptomsCheck';
 import EditSymptom from '../pages/EditSymptom';
+import VaccineCard from '../pages/VaccineCard';
 import NotFound from '../pages/NotFound';
 import Signin from '../pages/Signin';
 import Signup from '../pages/Signup';
@@ -33,6 +34,7 @@ class App extends React.Component {
             <ProtectedRoute path="/history" component={History}/>
             <ProtectedRoute path="/daily-check" component={SymptomsCheck}/>
             <ProtectedRoute path="/edit/:_id" component={EditSymptom}/>
+            <ProtectedRoute path="/addcard" component={VaccineCard}/>
             <AdminProtectedRoute path="/admin" component={ListStuffAdmin}/>
             <Route component={NotFound}/>
           </Switch>
