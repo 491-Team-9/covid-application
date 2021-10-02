@@ -1,12 +1,17 @@
 import React from 'react';
-import { Grid, Card, Button, Icon, List } from 'semantic-ui-react';
+import { Grid, Card, Button, Icon, List, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import { Vaccines } from '../../api/vaccine/Vaccine';
 
 /** A simple static component to render some text for the landing page. */
 class Home extends React.Component {
   render() {
+    return (this.props.ready) ? this.renderPage() : <Loader active>Getting data</Loader>;
+  }
+
+  renderPage() {
     return (
       <Grid verticalAlign='middle' textAlign='left' container>
 
@@ -41,28 +46,28 @@ class Home extends React.Component {
               </Card.Content>
             </Card>
             { this.props.vaccines.length > 0 ?
-            <Card>
-              <Card.Content>
-                <Card.Header>
+              <Card>
+                <Card.Content>
+                  <Card.Header>
                 Vaccination Card Submission
-                  <Button color="green" floated='right' href=''><Icon name="check"/>Valid</Button>
-                </Card.Header>
-              </Card.Content>
-            </Card>
-            :
-            <Card>
-              <Card.Content>
-                <Card.Header>
+                    <Button color="green" floated='right' href=''><Icon name="check"/>Valid</Button>
+                  </Card.Header>
+                </Card.Content>
+              </Card>
+              :
+              <Card>
+                <Card.Content>
+                  <Card.Header>
                 Vaccination Card Submission
-                  <Button color="red" floated='right' href=''><Icon name="warning sign"/>Info Required</Button>
-                </Card.Header>
-                <Card.Description>
+                    <Button color="red" floated='right' href=''><Icon name="warning sign"/>Info Required</Button>
+                  </Card.Header>
+                  <Card.Description>
                   To speed up the check-in process, you can submit vaccination card to be approved quickly.
-                  <br/><br/>
-                  <Button href='#/addcard' color="blue">Submit Vaccination Card</Button>
-                </Card.Description>
-              </Card.Content>
-            </Card> }
+                    <br/><br/>
+                    <Button href='#/addcard' color="blue">Submit Vaccination Card</Button>
+                  </Card.Description>
+                </Card.Content>
+              </Card> }
             <Card>
               <Card.Content>
                 <Card.Header>
@@ -123,13 +128,20 @@ class Home extends React.Component {
   }
 }
 
+Home.propTypes = {
+  vaccines: PropTypes.object,
+  ready: PropTypes.bool.isRequired,
+};
+
 // withTracker connects Meteor data to React components. https://guide.meteor.com/react.html#using-withTracker
 export default withTracker(() => {
-  // Get access to Stuff documents.
+  // Get access to Vaccine documents.
   const subscription = Meteor.subscribe(Vaccines.userPublicationName);
-  // Get the Stuff documents
+  // Get the Vaccine documents
+  const ready = subscription.ready();
   const vaccines = Vaccines.collection.find({}).fetch();
   return {
     vaccines,
+    ready,
   };
 })(Home);

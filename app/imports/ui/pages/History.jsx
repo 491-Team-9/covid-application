@@ -18,7 +18,7 @@ class History extends React.Component {
   renderPage() {
     return (
       <Container>
-        <Header as="h2" textAlign="center">History</Header>
+        <Header as="h2" textAlign="center">Check In History</Header>
         <Table celled>
           <Table.Header>
             <Table.Row>
