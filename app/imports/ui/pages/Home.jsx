@@ -76,7 +76,6 @@ class Home extends React.Component {
                       </Card.Header>
                     </Card.Content>
                     <Card.Description>
-                      { this.props.vaccines[0]. }
                       <img className="ui medium rounded image" src={ this.props.vaccines[0].picture }/>
                     </Card.Description>
                   </Card>
