@@ -1,12 +1,14 @@
 import React from 'react';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import { AutoForm, TextField, DateField, ErrorsField, SubmitField, SelectField } from 'uniforms-semantic';
+import { HTMLFieldProps, connectField } from 'uniforms';
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
 // import { Symptoms } from '../../api/symptom/Symptom';
 import { Vaccines } from '../../api/vaccine/Vaccine';
+import ImageField from '../components/ImageComponent';
 
 const vaccines = ['Pfizer-BioNTech COVID-19', 'Moderna COVID-19', 'Janssen COVID-19 (Johnson & Johnson)', 'AstraZeneca-AZD1222',
   'Sinopharm BIBP-SARS-CoV-2', 'Sinovac-SARS-CoV-2', 'Gamelya-Sputnik V', 'CanSinoBio', 'Vector - EpiVacCorona',
@@ -24,6 +26,10 @@ const formSchema = new SimpleSchema({
   secondLotNum: String,
   secondDate: Date,
   secondSite: String,
+  picture: {
+    type: 'string',
+    uniforms: { component: ImageField }
+  }
 });
 
 const bridge = new SimpleSchema2Bridge(formSchema);
@@ -51,6 +57,7 @@ class VaccineCard extends React.Component {
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   render() {
     let fRef = null;
+    console.log(ImageField);
     return (
       <Container>
         <Header as="h1" textAlign="left">Edit Vaccine Registry</Header>
@@ -116,6 +123,7 @@ class VaccineCard extends React.Component {
                 <TextField name="secondSite" placeholder="Healthcare Professional or Clinic Site" label={false}/>
               </Grid.Column>
             </Grid.Row>
+            <ImageField/>
 
           </Grid>
           <SubmitField value='Submit'/>
