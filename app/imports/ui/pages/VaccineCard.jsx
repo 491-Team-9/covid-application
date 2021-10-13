@@ -1,12 +1,15 @@
 import React from 'react';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import { AutoForm, TextField, DateField, ErrorsField, SubmitField, SelectField } from 'uniforms-semantic';
+import { HTMLFieldProps, connectField } from 'uniforms';
+import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
 import SimpleSchema from 'simpl-schema';
 // import { Symptoms } from '../../api/symptom/Symptom';
 import { Vaccines } from '../../api/vaccine/Vaccine';
+import ImageField from '../components/ImageComponent';
 
 const vaccines = ['Pfizer-BioNTech COVID-19', 'Moderna COVID-19', 'Janssen COVID-19 (Johnson & Johnson)', 'AstraZeneca-AZD1222',
   'Sinopharm BIBP-SARS-CoV-2', 'Sinovac-SARS-CoV-2', 'Gamelya-Sputnik V', 'CanSinoBio', 'Vector - EpiVacCorona',
@@ -24,6 +27,10 @@ const formSchema = new SimpleSchema({
   secondLotNum: String,
   secondDate: Date,
   secondSite: String,
+  picture: {
+    type: 'string',
+    uniforms: { component: ImageField }
+  }
 });
 
 const bridge = new SimpleSchema2Bridge(formSchema);
@@ -32,20 +39,30 @@ const bridge = new SimpleSchema2Bridge(formSchema);
 class VaccineCard extends React.Component {
 
   // On submit, insert the data.
-  submit(data, formRef) {
+  async submit(data, formRef) {
     const { firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
-      secondLotNum, secondDate, secondSite } = data;
-    const owner = Meteor.user().username;
-    Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
-      secondLotNum, secondDate, secondSite, owner },
-    (error) => {
-      if (error) {
-        swal('Error', error.message, 'error');
-      } else {
-        swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
-        formRef.reset();
-      }
-    });
+      secondLotNum, secondDate, secondSite, picture } = data;
+    //get picture as binary blob 
+    let blob = await fetch(picture).then(r => r.blob());
+    var reader = new FileReader();
+    //turn blob into base64 encoded string and send to backend
+    reader.onloadend = () => {
+      var base64data = reader.result;                
+      const owner = Meteor.user().username;
+      Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
+        secondLotNum, secondDate, secondSite, owner, picture: base64data },
+      (error) => {
+        if (error) {
+          swal('Error', error.message, 'error');
+        } else {
+          let result = swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
+          formRef.reset();
+        }
+      });
+    }
+    console.log(blob);
+    reader.readAsDataURL(blob);
+
   }
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
@@ -116,9 +133,14 @@ class VaccineCard extends React.Component {
                 <TextField name="secondSite" placeholder="Healthcare Professional or Clinic Site" label={false}/>
               </Grid.Column>
             </Grid.Row>
-
+            <Grid.Row>
+              <h2>Vaccine Card</h2>
+            </Grid.Row>
+            <Grid.Row>
+              <ImageField name="picture"/>
+            </Grid.Row>
+            <SubmitField value='Submit'/>
           </Grid>
-          <SubmitField value='Submit'/>
           <ErrorsField/>
         </AutoForm>
       </Container>
