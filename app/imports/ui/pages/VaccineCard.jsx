@@ -40,7 +40,8 @@ class VaccineCard extends React.Component {
   // On submit, insert the data.
   submit(data, formRef) {
     const { firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
-      secondLotNum, secondDate, secondSite } = data;
+      secondLotNum, secondDate, secondSite, picture } = data;
+    console.log(data.picture);
     const owner = Meteor.user().username;
     Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
       secondLotNum, secondDate, secondSite, owner },
@@ -57,7 +58,6 @@ class VaccineCard extends React.Component {
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
   render() {
     let fRef = null;
-    console.log(ImageField);
     return (
       <Container>
         <Header as="h1" textAlign="left">Edit Vaccine Registry</Header>
@@ -123,8 +123,7 @@ class VaccineCard extends React.Component {
                 <TextField name="secondSite" placeholder="Healthcare Professional or Clinic Site" label={false}/>
               </Grid.Column>
             </Grid.Row>
-            <ImageField/>
-
+            <ImageField name="picture"/>
           </Grid>
           <SubmitField value='Submit'/>
           <ErrorsField/>
