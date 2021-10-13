@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import { AutoForm, TextField, DateField, ErrorsField, SubmitField, SelectField } from 'uniforms-semantic';
 import { HTMLFieldProps, connectField } from 'uniforms';
+import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -38,21 +39,30 @@ const bridge = new SimpleSchema2Bridge(formSchema);
 class VaccineCard extends React.Component {
 
   // On submit, insert the data.
-  submit(data, formRef) {
+  async submit(data, formRef) {
     const { firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
       secondLotNum, secondDate, secondSite, picture } = data;
-    console.log(data.picture);
-    const owner = Meteor.user().username;
-    Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
-      secondLotNum, secondDate, secondSite, owner },
-    (error) => {
-      if (error) {
-        swal('Error', error.message, 'error');
-      } else {
-        swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
-        formRef.reset();
-      }
-    });
+    //get picture as binary blob 
+    let blob = await fetch(picture).then(r => r.blob());
+    var reader = new FileReader();
+    //turn blob into base64 encoded string and send to backend
+    reader.onloadend = () => {
+      var base64data = reader.result;                
+      const owner = Meteor.user().username;
+      Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
+        secondLotNum, secondDate, secondSite, owner, picture: base64data },
+      (error) => {
+        if (error) {
+          swal('Error', error.message, 'error');
+        } else {
+          let result = swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
+          formRef.reset();
+        }
+      });
+    }
+    console.log(blob);
+    reader.readAsDataURL(blob);
+
   }
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms
@@ -123,9 +133,14 @@ class VaccineCard extends React.Component {
                 <TextField name="secondSite" placeholder="Healthcare Professional or Clinic Site" label={false}/>
               </Grid.Column>
             </Grid.Row>
-            <ImageField name="picture"/>
+            <Grid.Row>
+              <h2>Vaccine Card</h2>
+            </Grid.Row>
+            <Grid.Row>
+              <ImageField name="picture"/>
+            </Grid.Row>
+            <SubmitField value='Submit'/>
           </Grid>
-          <SubmitField value='Submit'/>
           <ErrorsField/>
         </AutoForm>
       </Container>

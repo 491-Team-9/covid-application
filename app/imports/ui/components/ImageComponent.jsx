@@ -3,15 +3,19 @@ import { HTMLFieldProps, connectField } from 'uniforms';
 
 
 function Image({ onChange, value }) {
-  console.log("image form");
   return (
     <div className="ImageField">
       <label htmlFor="file-input">
-        <div>Choose your photo</div>
+        <h4>Select photo of your vaccine card</h4>
         <img
-          alt=""
-          style={{ cursor: 'pointer', width: '150px', height: '150px' }}
-          src={value || 'https://picsum.photos/150?grayscale'}
+          alt="Select a photo of your vaccine card"
+          style={{ 
+            cursor: 'pointer', 
+            width: '150px', 
+            height: '150px', 
+            background: '#B0F9FF',
+            borderRadius: '3px' }}
+          src={value}
         />
       </label>
       <input
