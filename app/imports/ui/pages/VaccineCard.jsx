@@ -60,9 +60,7 @@ class VaccineCard extends React.Component {
         }
       });
     }
-    console.log(blob);
     reader.readAsDataURL(blob);
-
   }
 
   // Render the form. Use Uniforms: https://github.com/vazco/uniforms

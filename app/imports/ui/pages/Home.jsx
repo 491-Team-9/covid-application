@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, Button, Icon, List, Loader } from 'semantic-ui-react';
+import { Grid, Card, Button, Table, Icon, List, Loader } from 'semantic-ui-react';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
@@ -68,6 +68,18 @@ class Home extends React.Component {
                   </Card.Description>
                 </Card.Content>
               </Card> }
+              { this.props.vaccines.length > 0 &&
+                  <Card>
+                    <Card.Content>
+                      <Card.Header>
+                    Uploaded Vaccine Card
+                      </Card.Header>
+                    </Card.Content>
+                    <Card.Description>
+                      <img className="ui medium image" src={ this.props.vaccines[0].picture }/>
+                    </Card.Description>
+                  </Card>
+               }
             <Card>
               <Card.Content>
                 <Card.Header>
@@ -129,7 +141,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  vaccines: PropTypes.object,
+  vaccines: PropTypes.array,
   ready: PropTypes.bool.isRequired,
 };
 
