@@ -1,6 +1,6 @@
 import React from 'react';
-import { HTMLFieldProps, connectField } from 'uniforms';
-
+import { connectField } from 'uniforms';
+import PropTypes from 'prop-types';
 
 function Image({ onChange, value }) {
   return (
@@ -9,10 +9,10 @@ function Image({ onChange, value }) {
         <h4>Select photo of your vaccine card</h4>
         <img
           alt="Select a photo of your vaccine card"
-          style={{ 
-            cursor: 'pointer', 
-            width: '150px', 
-            height: '150px', 
+          style={{
+            cursor: 'pointer',
+            width: '150px',
+            height: '150px',
             background: '#B0F9FF',
             borderRadius: '3px' }}
           src={value}
@@ -32,5 +32,10 @@ function Image({ onChange, value }) {
     </div>
   );
 }
+
+Image.propTypes = {
+  onChange: PropTypes.object,
+  value: PropTypes.string,
+};
 
 export default connectField(Image);

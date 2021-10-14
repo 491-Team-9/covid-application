@@ -1,8 +1,6 @@
 import React from 'react';
 import { Container, Grid, Header } from 'semantic-ui-react';
 import { AutoForm, TextField, DateField, ErrorsField, SubmitField, SelectField } from 'uniforms-semantic';
-import { HTMLFieldProps, connectField } from 'uniforms';
-import { useHistory } from "react-router-dom";
 import swal from 'sweetalert';
 import { Meteor } from 'meteor/meteor';
 import SimpleSchema2Bridge from 'uniforms-bridge-simple-schema-2';
@@ -29,8 +27,8 @@ const formSchema = new SimpleSchema({
   secondSite: String,
   picture: {
     type: 'string',
-    uniforms: { component: ImageField }
-  }
+    uniforms: { component: ImageField },
+  },
 });
 
 const bridge = new SimpleSchema2Bridge(formSchema);
@@ -42,12 +40,12 @@ class VaccineCard extends React.Component {
   async submit(data, formRef) {
     const { firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
       secondLotNum, secondDate, secondSite, picture } = data;
-    //get picture as binary blob 
-    let blob = await fetch(picture).then(r => r.blob());
-    var reader = new FileReader();
-    //turn blob into base64 encoded string and send to backend
+    // get picture as binary blob
+    const blob = await fetch(picture).then(r => r.blob());
+    const reader = new FileReader();
+    // turn blob into base64 encoded string and send to backend
     reader.onloadend = () => {
-      var base64data = reader.result;                
+      const base64data = reader.result;
       const owner = Meteor.user().username;
       Vaccines.collection.insert({ firstName, lastName, patientNumber, vaccineName, firstLotNum, firstDate, firstSite,
         secondLotNum, secondDate, secondSite, owner, picture: base64data },
@@ -55,11 +53,11 @@ class VaccineCard extends React.Component {
         if (error) {
           swal('Error', error.message, 'error');
         } else {
-          let result = swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
+          swal('Success', 'Please wait for confirmation before reporting to campus', 'success');
           formRef.reset();
         }
       });
-    }
+    };
     reader.readAsDataURL(blob);
   }
 
