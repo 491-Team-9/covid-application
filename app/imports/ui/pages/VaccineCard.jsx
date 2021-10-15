@@ -9,6 +9,8 @@ import SimpleSchema from 'simpl-schema';
 import { Vaccines } from '../../api/vaccine/Vaccine';
 import ImageField from '../components/ImageComponent';
 
+/* eslint-env browser */
+
 const vaccines = ['Pfizer-BioNTech COVID-19', 'Moderna COVID-19', 'Janssen COVID-19 (Johnson & Johnson)', 'AstraZeneca-AZD1222',
   'Sinopharm BIBP-SARS-CoV-2', 'Sinovac-SARS-CoV-2', 'Gamelya-Sputnik V', 'CanSinoBio', 'Vector - EpiVacCorona',
   'Zhifei Longcom - Recombinant Novel', 'IMBCAMS -SARS-CoV-2', 'Novavax'];
